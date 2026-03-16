@@ -1,21 +1,18 @@
 # Tjäldjupskarta
 
-Frost depth map for Sweden built on [Trafikverket](https://data.trafikverket.se/) measurement stations. A GitHub Actions workflow fetches fresh data daily and stores it on the `data` branch, so the site works without a backend.
+![Data updated](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpmatsson%2Ftjale%2Fdata%2Flast-updated.json&query=%24.date&label=data%20updated&color=blue)
 
-## Development
+Interactive frost depth map for Sweden using [Trafikverket](https://data.trafikverket.se/) weather stations. Live at [frost.foodson.dev](https://frost.foodson.dev).
+
+Data is fetched daily via GitHub Actions and stored on the `data` branch — no backend needed.
+
+## Dev
 
 ```sh
 npm install
-npm run dev
+npm run dev        # dev server
+npm run typecheck  # type check
+npm run build      # production build
 ```
 
-The app fetches live data from the `data` branch on GitHub. No local data file needed.
-
-```sh
-npm run typecheck
-npm run build
-```
-
-## Deployment
-
-Pushes to `main` deploy to GitHub Pages automatically. Set `TRAFIKVERKET_API_KEY` as a repository secret to enable the daily data fetch.
+Set `TRAFIKVERKET_API_KEY` as a repository secret to enable the data fetch. Pushes to `main` deploy automatically.

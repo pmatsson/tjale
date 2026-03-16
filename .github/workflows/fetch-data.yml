@@ -46,11 +46,31 @@ jobs:
 
       - name: Push to data branch
         run: |
-          git checkout --orphan data
-          git rm -rf . --quiet
-          cp /tmp/data.json data.json
-          git add data.json
+          DATE=$(date -u +'%Y-%m-%d')
+          CUTOFF=$(date -u -d '90 days ago' +'%Y-%m-%d')
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "data"
-          git push origin data --force
+
+          if git fetch origin data:data 2>/dev/null; then
+            git checkout data
+          else
+            git checkout --orphan data
+            git rm -rf . --quiet
+          fi
+
+          cp /tmp/data.json "${DATE}.json"
+          cp /tmp/data.json data.json
+          echo "{\"date\":\"${DATE}\"}" > last-updated.json
+
+          for f in ????-??-??.json; do
+            [ -f "$f" ] || continue
+            d="${f%.json}"
+            [[ "$d" < "$CUTOFF" ]] && git rm --quiet "$f"
+          done
+
+          ls ????-??-??.json 2>/dev/null | sort | jq -Rsc 'split("\n") | map(select(. != "")) | map(.[:-5])' > manifest.json
+
+          git add "${DATE}.json" data.json last-updated.json manifest.json
+          git diff --staged --quiet || git commit -m "data: ${DATE}"
+          git push origin data

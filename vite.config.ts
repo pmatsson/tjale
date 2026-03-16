@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/tjale/",
+  base: "/",
   build: {
     chunkSizeWarningLimit: 1500,
   },
