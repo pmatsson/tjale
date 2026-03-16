@@ -91,7 +91,7 @@ body,
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 260px;
+  width: 260px;
 }
 
 #panel-controls label {
@@ -161,7 +161,7 @@ body,
 #panel-legend {
   bottom: 16px;
   left: 16px;
-  min-width: 260px;
+  width: 260px;
 }
 
 .legend-title {
@@ -200,58 +200,96 @@ body,
 
 .maplibregl-popup-content {
   padding: 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
   font-family: "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
+  min-width: 220px;
 }
 
 .maplibregl-popup-close-button {
-  font-size: 16px;
-  padding: 4px 8px;
-  color: #666;
+  font-size: 18px;
+  line-height: 1;
+  padding: 8px 10px;
+  color: rgba(255, 255, 255, 0.85);
+  z-index: 1;
+}
+
+.maplibregl-popup-close-button:hover {
+  color: #fff;
+  background: transparent;
 }
 
 /* ── Popup ── */
 
-.popup-content h3 {
+.popup-header {
+  padding: 12px 36px 12px 14px;
+  background: #1a3fa8;
+}
+
+.popup-header.no-frost {
+  background: #1e7d4a;
+}
+
+.popup-header h3 {
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 4px;
-  color: #0d1b4b;
+  color: #fff;
+  line-height: 1.3;
 }
 
 .popup-meta {
   font-size: 11px;
-  color: #888;
-  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
 }
 
-.popup-frost {
-  font-size: 13px;
-  margin-bottom: 6px;
+.popup-body {
+  padding: 12px 14px;
+}
+
+.popup-frost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #eef2ff;
   color: #1a3fa8;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
-.popup-no-frost {
-  font-size: 13px;
-  color: #27ae60;
-  margin-bottom: 6px;
+.popup-frost-badge.no-frost {
+  background: #edfaf3;
+  color: #1e7d4a;
 }
 
 .popup-content details {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .popup-content summary {
   cursor: pointer;
   font-size: 12px;
-  color: #555;
+  color: #777;
   user-select: none;
+  padding: 2px 0;
+}
+
+.popup-content summary:hover {
+  color: #333;
+}
+
+.popup-table-wrap {
+  max-height: 160px;
+  overflow-y: auto;
+  margin-top: 8px;
 }
 
 .popup-table {
-  margin-top: 6px;
   border-collapse: collapse;
   width: 100%;
   font-size: 12px;
@@ -259,42 +297,100 @@ body,
 
 .popup-table th {
   text-align: left;
-  color: #888;
+  color: #999;
   font-weight: 600;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 2px 6px 4px 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #eee;
+  padding: 2px 8px 4px 0;
 }
 
 .popup-table td {
-  padding: 2px 6px 2px 0;
+  padding: 4px 8px 4px 0;
   color: #333;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.popup-table tr:hover td {
-  background: #f5f7ff;
+.popup-table tr:last-child td {
+  border-bottom: none;
 }
 
 .popup-table td.frozen {
   color: #1a5fd6;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .popup-table td.thawed {
-  color: #27ae60;
+  color: #1e7d4a;
 }
 
 /* ── Station markers ── */
 
+.station-marker-anchor {
+  width: 14px;
+  height: 14px;
+}
+
 .station-marker {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: #4caf50;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  background: #22c55e;
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.station-marker:hover {
+  transform: scale(1.5);
 }
 
 .station-marker.frost {
-  background: #1a5fd6;
+  background: #2563eb;
+  animation: frost-pulse 2.2s ease-out infinite;
+}
+
+@keyframes frost-pulse {
+  0%   { box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 0   rgba(37, 99, 235, 0.45); }
+  70%  { box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 8px  rgba(37, 99, 235, 0);   }
+  100% { box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 0   rgba(37, 99, 235, 0);   }
+}
+
+/* ── Mobile ── */
+
+@media (max-width: 600px) {
+  #panel-title {
+    top: 0;
+    left: 0;
+    right: 0;
+    min-width: unset;
+    border-radius: 0 0 12px 12px;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .panel-header h1 {
+    font-size: 15px;
+  }
+
+  .panel-header p {
+    display: none;
+  }
+
+  #panel-controls {
+    display: none;
+  }
+
+  #panel-legend {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+  }
+
+  .maplibregl-ctrl-top-right {
+    top: 60px;
+  }
 }

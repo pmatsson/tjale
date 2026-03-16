@@ -47,22 +47,28 @@ function popup(station: Station): string {
     )
     .join("");
 
-  const frostLine = station.hasFrost
-    ? `<p class="popup-frost">${t("frostRange")}: <strong>${station.frostTop > 0 ? station.frostTop.toFixed(0) : "0"} – ${station.frostBottom.toFixed(0)} cm</strong></p>`
-    : `<p class="popup-no-frost">${t("noFrostFound")}</p>`;
+  const frostBadge = station.hasFrost
+    ? `<div class="popup-frost-badge">${t("frostRange")}: ${station.frostTop > 0 ? station.frostTop.toFixed(0) : "0"} – ${station.frostBottom.toFixed(0)} cm</div>`
+    : `<div class="popup-frost-badge no-frost">${t("noFrostFound")}</div>`;
 
   return `
     <div class="popup-content">
-      <h3>${station.stationName}</h3>
-      <p class="popup-meta">${t("lastMeasured")}: ${station.sample.toLocaleString()}</p>
-      ${frostLine}
-      <details>
-        <summary>${t("temperatureProfile")}</summary>
-        <table class="popup-table">
-          <thead><tr><th>${t("depth")}</th><th>°C</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </details>
+      <div class="popup-header${station.hasFrost ? "" : " no-frost"}">
+        <h3>${station.stationName}</h3>
+        <p class="popup-meta">${t("lastMeasured")}: ${station.sample.toLocaleString()}</p>
+      </div>
+      <div class="popup-body">
+        ${frostBadge}
+        <details>
+          <summary>${t("temperatureProfile")}</summary>
+          <div class="popup-table-wrap">
+            <table class="popup-table">
+              <thead><tr><th>${t("depth")}</th><th>°C</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </details>
+      </div>
     </div>
   `;
 }
@@ -111,7 +117,10 @@ export function initMap(containerId: string): MapController {
 
     for (const station of stations) {
       const el = document.createElement("div");
-      el.className = station.hasFrost ? "station-marker frost" : "station-marker";
+      el.className = "station-marker-anchor";
+      const dot = document.createElement("div");
+      dot.className = station.hasFrost ? "station-marker frost" : "station-marker";
+      el.appendChild(dot);
 
       const p = new maplibregl.Popup({ maxWidth: "280px" });
       el.addEventListener("click", () => p.setHTML(popup(station)));
