@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Interactive frost depth map for Sweden, powered by Trafikverket open data",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "engines": {
     "node": ">=20"
   },

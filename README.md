@@ -1,6 +1,6 @@
 # Tjäldjupskarta
 
-Frost depth map for Sweden built on [Trafikverket](https://data.trafikverket.se/) measurement stations. A GitHub Actions workflow fetches fresh data hourly and commits it as a static JSON file, so the site works without a backend.
+Frost depth map for Sweden built on [Trafikverket](https://data.trafikverket.se/) measurement stations. A GitHub Actions workflow fetches fresh data daily and stores it on the `data` branch, so the site works without a backend.
 
 ## Development
 
@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-`public/data.json` is what the app reads. Trigger the fetch workflow manually to populate it, or drop in a real API response yourself.
+The app fetches live data from the `data` branch on GitHub. No local data file needed.
 
 ```sh
 npm run typecheck
@@ -18,4 +18,4 @@ npm run build
 
 ## Deployment
 
-Pushes to `main` deploy to GitHub Pages automatically. Set `TRAFIKVERKET_API_KEY` as a repository secret to enable the data fetch.
+Pushes to `main` deploy to GitHub Pages automatically. Set `TRAFIKVERKET_API_KEY` as a repository secret to enable the daily data fetch.

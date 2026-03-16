@@ -78,13 +78,13 @@ function depthToColor(depth: number): [number, number, number, number] {
   if (depth <= 0) return [0, 0, 0, 0];
 
   const stops: [number, [number, number, number, number]][] = [
-    [1,   [173, 216, 240,  60]],
-    [10,  [100, 180, 255, 120]],
-    [30,  [ 30, 120, 255, 160]],
-    [60,  [  0,  60, 200, 190]],
-    [100, [ 80,   0, 180, 210]],
-    [150, [200,   0, 100, 230]],
-    [200, [180,   0,   0, 245]],
+    [1,   [ 60, 200,  80,  60]],  // green
+    [10,  [ 80, 220, 160, 120]],  // green-cyan
+    [30,  [ 40, 180, 220, 160]],  // cyan
+    [60,  [ 30, 100, 220, 190]],  // blue
+    [100, [200,  40,  40, 210]],  // red
+    [150, [160,  20, 140, 230]],  // red-purple
+    [200, [100,   0, 180, 245]],  // purple
   ];
 
   const clamped = Math.min(depth, MAX_DEPTH_CM);

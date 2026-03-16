@@ -178,12 +178,12 @@ body,
   border-radius: 4px;
   background: linear-gradient(
     to right,
-    rgba(173, 216, 240, 0.5),
-    rgba(30, 120, 255, 0.7),
-    rgba(0, 60, 200, 0.8),
-    rgba(80, 0, 180, 0.85),
-    rgba(200, 0, 100, 0.92),
-    rgba(180, 0, 0, 0.96)
+    rgba(60, 200, 80, 0.5),
+    rgba(40, 180, 220, 0.7),
+    rgba(30, 100, 220, 0.8),
+    rgba(200, 40, 40, 0.85),
+    rgba(160, 20, 140, 0.92),
+    rgba(100, 0, 180, 0.96)
   );
   border: 1px solid rgba(0, 0, 0, 0.1);
   margin-bottom: 4px;

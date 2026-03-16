@@ -12,7 +12,8 @@ export type TranslationKey =
   | "station"
   | "lastMeasured"
   | "stationsLoaded"
-  | "legendNone"
+  | "legendShallow"
+  | "legendMid"
   | "legendDeep"
   | "opacity"
   | "temperatureProfile"
@@ -32,8 +33,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     station: "Mätstation",
     lastMeasured: "Senast mätt",
     stationsLoaded: "stationer laddade",
-    legendNone: "Ingen tjäle",
-    legendDeep: "Djup tjäle",
+    legendShallow: "Ytlig",
+    legendMid: "Måttlig",
+    legendDeep: "Djup",
     opacity: "Opacitet",
     temperatureProfile: "Temperaturprofil",
     noFrostFound: "Ingen tjäle detekterad",
@@ -51,8 +53,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     station: "Measurement station",
     lastMeasured: "Last measured",
     stationsLoaded: "stations loaded",
-    legendNone: "No frost",
-    legendDeep: "Deep frost",
+    legendShallow: "Shallow",
+    legendMid: "Moderate",
+    legendDeep: "Deep",
     opacity: "Opacity",
     temperatureProfile: "Temperature profile",
     noFrostFound: "No frost detected",

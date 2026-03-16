@@ -1,4 +1,4 @@
-const DATA_URL = import.meta.env.BASE_URL + "data.json";
+const DATA_URL = "https://raw.githubusercontent.com/pmatsson/tjale/data/data.json";
 
 const EXCLUDED_STATIONS = ["Moskosel"];
 

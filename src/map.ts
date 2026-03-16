@@ -99,7 +99,9 @@ export function initMap(containerId: string): MapController {
   });
 
   map.addControl(new maplibregl.NavigationControl(), "top-right");
-  map.on("load", () => initLayers(map));
+
+  let layersReady = false;
+  map.on("load", () => { initLayers(map); layersReady = true; });
 
   let markers: maplibregl.Marker[] = [];
 
@@ -124,7 +126,7 @@ export function initMap(containerId: string): MapController {
   }
 
   function updateMap(stations: Station[], opacityPct: number) {
-    if (!map.loaded()) {
+    if (!layersReady) {
       map.once("load", () => updateMap(stations, opacityPct));
       return;
     }
