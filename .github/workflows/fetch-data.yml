@@ -1,0 +1,53 @@
+name: Fetch frost data
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch frost data from Trafikverket
+        env:
+          TRAFIKVERKET_API_KEY: ${{ secrets.TRAFIKVERKET_API_KEY }}
+        run: |
+          cat > /tmp/query.xml <<EOF
+          <REQUEST>
+            <LOGIN authenticationkey="${TRAFIKVERKET_API_KEY}" />
+            <QUERY namespace="Road.WeatherInfo" objecttype="FrostDepthObservation" schemaversion="1" orderby="FrostDepth.Sample desc" limit="2000">
+              <FILTER>
+                <GT name="FrostDepth.Sample" value="\$dateadd(-2.00:00:00)" />
+              </FILTER>
+              <INCLUDE>Measurepoint.Id</INCLUDE>
+              <INCLUDE>Measurepoint.Name</INCLUDE>
+              <INCLUDE>Measurepoint.Geometry.WGS84</INCLUDE>
+              <INCLUDE>FrostDepth.Sample</INCLUDE>
+              <INCLUDE>FrostDepth.Temperature</INCLUDE>
+            </QUERY>
+          </REQUEST>
+          EOF
+
+          curl -sf -X POST \
+            -H "Content-Type: text/xml" \
+            --data-binary @/tmp/query.xml \
+            https://api.trafikinfo.trafikverket.se/v2/data.json \
+            -o /tmp/data.json
+
+          # Validate response is well-formed JSON with expected structure
+          jq -e '.RESPONSE.RESULT[0].FrostDepthObservation | length > 0' /tmp/data.json > /dev/null
+
+          cp /tmp/data.json public/data.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data.json
+          git diff --staged --quiet || git commit -m "data: update frost observations $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git push

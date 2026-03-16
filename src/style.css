@@ -1,0 +1,300 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  color: #1a1a2e;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── Panels ── */
+
+.panel {
+  position: absolute;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 14px 16px;
+}
+
+#panel-title {
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 240px;
+}
+
+.panel-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d1b4b;
+  line-height: 1.2;
+}
+
+.panel-header p {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.lang-toggle {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border: 1.5px solid #c0c8e0;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.15s;
+}
+
+.lang-btn.active,
+.lang-btn:hover {
+  background: #1a5fd6;
+  border-color: #1a5fd6;
+  color: #fff;
+}
+
+/* ── Controls panel ── */
+
+#panel-controls {
+  bottom: 100px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 260px;
+}
+
+#panel-controls label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #444;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#btn-load {
+  padding: 8px 18px;
+  background: #1a5fd6;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+#btn-load:hover:not(:disabled) {
+  background: #1449aa;
+}
+
+#btn-load:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+#opacity-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+#opacity-slider {
+  width: 100%;
+  accent-color: #1a5fd6;
+}
+
+#status {
+  font-size: 12px;
+  color: #555;
+  min-height: 16px;
+}
+
+#status.status-error {
+  color: #c0392b;
+}
+
+#status.status-ok {
+  color: #27ae60;
+}
+
+/* ── Legend panel ── */
+
+#panel-legend {
+  bottom: 16px;
+  left: 16px;
+  min-width: 260px;
+}
+
+.legend-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#legend-gradient {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    rgba(173, 216, 240, 0.5),
+    rgba(30, 120, 255, 0.7),
+    rgba(0, 60, 200, 0.8),
+    rgba(80, 0, 180, 0.85),
+    rgba(200, 0, 100, 0.92),
+    rgba(180, 0, 0, 0.96)
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 4px;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666;
+}
+
+/* ── MapLibre popup shell ── */
+
+.maplibregl-popup-content {
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.maplibregl-popup-close-button {
+  font-size: 16px;
+  padding: 4px 8px;
+  color: #666;
+}
+
+/* ── Popup ── */
+
+.popup-content h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #0d1b4b;
+}
+
+.popup-meta {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.popup-frost {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #1a3fa8;
+}
+
+.popup-no-frost {
+  font-size: 13px;
+  color: #27ae60;
+  margin-bottom: 6px;
+}
+
+.popup-content details {
+  margin-top: 4px;
+}
+
+.popup-content summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #555;
+  user-select: none;
+}
+
+.popup-table {
+  margin-top: 6px;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.popup-table th {
+  text-align: left;
+  color: #888;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 2px 6px 4px 0;
+}
+
+.popup-table td {
+  padding: 2px 6px 2px 0;
+  color: #333;
+}
+
+.popup-table tr:hover td {
+  background: #f5f7ff;
+}
+
+.popup-table td.frozen {
+  color: #1a5fd6;
+  font-weight: 600;
+}
+
+.popup-table td.thawed {
+  color: #27ae60;
+}
+
+/* ── Station markers ── */
+
+.station-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4caf50;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.station-marker.frost {
+  background: #1a5fd6;
+}
