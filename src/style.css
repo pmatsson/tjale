@@ -362,11 +362,11 @@ body,
 
 @media (max-width: 600px) {
   #panel-title {
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 8px;
+    left: 8px;
+    right: 60px;
     min-width: unset;
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     padding: 10px 14px;
     gap: 10px;
   }
@@ -391,6 +391,6 @@ body,
   }
 
   .maplibregl-ctrl-top-right {
-    top: 60px;
+    top: 8px;
   }
 }
