@@ -3,7 +3,6 @@ export type Language = "sv" | "en";
 export type TranslationKey =
   | "title"
   | "subtitle"
-  | "refreshButton"
   | "loading"
   | "error"
   | "noData"
@@ -18,13 +17,18 @@ export type TranslationKey =
   | "opacity"
   | "temperatureProfile"
   | "noFrostFound"
-  | "frostRange";
+  | "frostRange"
+  | "play"
+  | "pause"
+  | "latest"
+  | "noHistory"
+  | "modeDepth"
+  | "modeFrostLine";
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
   sv: {
-    title: "Tjäldjupskarta",
-    subtitle: "Aktuellt tjäldjup i Sverige",
-    refreshButton: "Uppdatera",
+    title: "Tjälkarta",
+    subtitle: "Tjälläget i Sverige",
     loading: "Hämtar data…",
     error: "Fel vid hämtning av data",
     noData: "Ingen data tillgänglig",
@@ -40,11 +44,16 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     temperatureProfile: "Temperaturprofil",
     noFrostFound: "Ingen tjäle detekterad",
     frostRange: "Tjäle (från–till)",
+    play: "Spela upp",
+    pause: "Pausa",
+    latest: "LIVE",
+    noHistory: "Historik ej tillgänglig",
+    modeDepth: "Djup",
+    modeFrostLine: "Tjällinje",
   },
   en: {
-    title: "Frost Depth Map",
-    subtitle: "Current frost depth in Sweden",
-    refreshButton: "Refresh",
+    title: "Frost Map",
+    subtitle: "Ground frost in Sweden",
     loading: "Fetching data…",
     error: "Error fetching data",
     noData: "No data available",
@@ -60,6 +69,12 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     temperatureProfile: "Temperature profile",
     noFrostFound: "No frost detected",
     frostRange: "Frost layer (top–bottom)",
+    play: "Play",
+    pause: "Pause",
+    latest: "LIVE",
+    noHistory: "History unavailable",
+    modeDepth: "Depth",
+    modeFrostLine: "Frost line",
   },
 };
 
@@ -78,4 +93,8 @@ export function setLanguage(lang: Language): void {
 
 export function t(key: TranslationKey): string {
   return translations[currentLang][key];
+}
+
+export function getLang(): Language {
+  return currentLang;
 }

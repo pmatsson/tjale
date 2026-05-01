@@ -1,6 +1,4 @@
-const DATA_URL = "https://raw.githubusercontent.com/pmatsson/tjale/data/data.json";
-
-const EXCLUDED_STATIONS = ["Moskosel"];
+const BASE_URL = "https://raw.githubusercontent.com/pmatsson/tjale/data";
 
 export interface Reading {
   sensorName: string;
@@ -16,8 +14,8 @@ export interface Station {
   sample: Date;
   temperatures: Reading[];
   hasFrost: boolean;
-  frostTop: number;    // shallowest frozen depth (cm), 0 = starts at surface
-  frostBottom: number; // deepest frozen depth (cm)
+  frostTop: number;
+  frostBottom: number;
 }
 
 function parseWGS84(wkt: string): { lat: number; lon: number } | null {
@@ -77,7 +75,6 @@ function parse(data: any): Station[] {
     seen.add(stationId);
 
     const name: string = mp.Name ?? "";
-    if (EXCLUDED_STATIONS.some((ex) => name.includes(ex))) continue;
 
     const geo = parseWGS84(mp?.Geometry?.WGS84 ?? "");
     if (!geo) continue;
@@ -110,14 +107,21 @@ function parse(data: any): Station[] {
   return results;
 }
 
-export async function fetchFrostData(): Promise<Station[]> {
-  const response = await fetch(DATA_URL);
+export async function fetchManifest(): Promise<string[]> {
+  const r = await fetch(`${BASE_URL}/manifest.json`);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+export async function fetchFrostData(date?: string): Promise<Station[]> {
+  const url = date ? `${BASE_URL}/${date}.json` : `${BASE_URL}/data.json`;
+  const r = await fetch(url);
+
+  if (!r.ok) {
+    throw new Error(`HTTP ${r.status}: ${r.statusText}`);
   }
 
-  const data = await response.json();
+  const data = await r.json();
 
   const error = data?.RESPONSE?.RESULT?.[0]?.ERROR;
   if (error) {

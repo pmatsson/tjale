@@ -6,6 +6,8 @@ export interface DataPoint {
   value: number;
 }
 
+export type DisplayMode = "depth" | "frost-line";
+
 export const SWEDEN_BOUNDS = {
   north: 69.1,
   south: 55.3,
@@ -78,13 +80,13 @@ function depthToColor(depth: number): [number, number, number, number] {
   if (depth <= 0) return [0, 0, 0, 0];
 
   const stops: [number, [number, number, number, number]][] = [
-    [1,   [ 60, 200,  80,  60]],  // green
-    [10,  [ 80, 220, 160, 120]],  // green-cyan
-    [30,  [ 40, 180, 220, 160]],  // cyan
-    [60,  [ 30, 100, 220, 190]],  // blue
-    [100, [200,  40,  40, 210]],  // red
-    [150, [160,  20, 140, 230]],  // red-purple
-    [200, [100,   0, 180, 245]],  // purple
+    [1,   [ 60, 200,  80,  60]],
+    [10,  [ 80, 220, 160, 120]],
+    [30,  [ 40, 180, 220, 160]],
+    [60,  [ 30, 100, 220, 190]],
+    [100, [200,  40,  40, 210]],
+    [150, [160,  20, 140, 230]],
+    [200, [100,   0, 180, 245]],
   ];
 
   const clamped = Math.min(depth, MAX_DEPTH_CM);
@@ -111,7 +113,7 @@ function depthToColor(depth: number): [number, number, number, number] {
   return stops[stops.length - 1][1];
 }
 
-export function drawOverlay(points: DataPoint[]): HTMLCanvasElement {
+export function drawOverlay(points: DataPoint[], mode: DisplayMode = "depth"): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = GRID_WIDTH;
   canvas.height = GRID_HEIGHT;
@@ -121,19 +123,62 @@ export function drawOverlay(points: DataPoint[]): HTMLCanvasElement {
 
   const mask = swedenMask();
 
+  // Pre-compute IDW for every Sweden pixel (needed for boundary detection in frost-line mode)
+  const values = new Float32Array(GRID_WIDTH * GRID_HEIGHT).fill(-1);
   for (let y = 0; y < GRID_HEIGHT; y++) {
     for (let x = 0; x < GRID_WIDTH; x++) {
       const idx = y * GRID_WIDTH + x;
       if (!mask[idx]) continue;
-
       const [lat, lon] = pixelToLatLon(x, y);
-      const depth = idw(points, lat, lon);
-      const [r, g, b, a] = depthToColor(depth);
-      const px = idx * 4;
-      data[px] = r;
-      data[px + 1] = g;
-      data[px + 2] = b;
-      data[px + 3] = a;
+      values[idx] = idw(points, lat, lon);
+    }
+  }
+
+  if (mode === "depth") {
+    for (let i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+      if (!mask[i]) continue;
+      const [r, g, b, a] = depthToColor(values[i]);
+      const px = i * 4;
+      data[px] = r; data[px + 1] = g; data[px + 2] = b; data[px + 3] = a;
+    }
+  } else {
+    const frozen = (v: number) => v > 0.5;
+
+    for (let i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+      if (!mask[i] || !frozen(values[i])) continue;
+      const px = i * 4;
+      data[px] = 56; data[px + 1] = 189; data[px + 2] = 248; data[px + 3] = 72;
+    }
+
+    for (let y = 0; y < GRID_HEIGHT; y++) {
+      for (let x = 0; x < GRID_WIDTH; x++) {
+        const idx = y * GRID_WIDTH + x;
+        if (!mask[idx]) continue;
+
+        const isFrozen = frozen(values[idx]);
+        let isBoundary = false;
+
+        const neighbors: [number, number][] = [[x, y - 1], [x, y + 1], [x - 1, y], [x + 1, y]];
+        for (const [nx, ny] of neighbors) {
+          if (nx < 0 || nx >= GRID_WIDTH || ny < 0 || ny >= GRID_HEIGHT) {
+            if (isFrozen) { isBoundary = true; break; }
+            continue;
+          }
+          const nidx = ny * GRID_WIDTH + nx;
+          // Neighbor outside Sweden counts as non-frozen border
+          if (!mask[nidx]) {
+            if (isFrozen) { isBoundary = true; break; }
+            continue;
+          }
+          if (frozen(values[nidx]) !== isFrozen) { isBoundary = true; break; }
+        }
+
+        if (isBoundary) {
+          const px = idx * 4;
+          // Bright icy white-blue — overrides the fill from pass 1
+          data[px] = 210; data[px + 1] = 242; data[px + 2] = 255; data[px + 3] = 245;
+        }
+      }
     }
   }
 
